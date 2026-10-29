@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Backstop</title>
+<meta name="description" content="Backstop for iPhone: when a text or call feels off, Backstop checks it on your phone and helps you bring in your family before any money moves.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#1E4D40" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15302A" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%278%27 fill=%27%23E39B12%27/%3E%3Crect x=%2710.5%27 y=%278%27 width=%274.5%27 height=%2716%27 rx=%271.5%27 fill=%27%232E1D00%27/%3E%3Crect x=%2717%27 y=%278%27 width=%274.5%27 height=%2716%27 rx=%271.5%27 fill=%27%232E1D00%27/%3E%3C/svg%3E">
+<style>
+  :root {
+    color-scheme: light;
+    --paper: #EEF2F0; --card: #FFFFFF; --ink: #10241F; --muted: #3F504A;
+    --line: #CAD5D1; --edge: #7C8F88; --heading: #1E4D40; --link: #1E4D40; --focus: #1E4D40;
+    --band: #1E4D40; --on-band: #F4F8F6; --band-focus: #F2B544;
+    --amber: #E39B12; --amber-ink: #2E1D00; --amber-soft: #FBEBCB;
+    --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+    --body: "Figtree", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --paper: #0D1614; --card: #15211E; --ink: #E4EDEA; --muted: #B4C3BD;
+      --line: #263632; --edge: #5E7770; --heading: #7CC7AE; --link: #F0AE2E; --focus: #F0AE2E;
+      --band: #15302A; --on-band: #E4EDEA; --band-focus: #F0AE2E;
+      --amber: #F0AE2E; --amber-ink: #241600; --amber-soft: #3A2C10;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  /* On iPhone and iPad, follow the text size set in the Settings app. */
+  @supports (font: -apple-system-body) and (-webkit-touch-callout: none) {
+    html { font: -apple-system-body; }
+  }
+  body { margin: 0; background: var(--paper); color: var(--ink); overflow-wrap: break-word;
+         font-family: var(--body); font-size: max(18px, 1.1875rem); line-height: 1.6; }
+  .wrap { max-width: 44rem; margin: 0 auto; padding-left: 20px; padding-right: 20px; }
+  .skip { position: absolute; left: -9999px; top: 12px; }
+  .skip:focus { left: 16px; z-index: 1; background: var(--card); color: var(--ink); padding: 12px 18px;
+                border-radius: 12px; font-weight: 700; }
+  .band { background: var(--band); color: var(--on-band); --focus: var(--band-focus); }
+  .site { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 20px;
+          padding-top: 12px; padding-bottom: 12px; }
+  .brand { display: inline-flex; align-items: center; gap: 12px; min-height: 48px; color: var(--on-band);
+           font: 800 min(1.5rem, 14vw)/1 var(--display); letter-spacing: -0.01em; text-decoration: none; }
+  .mark { display: inline-flex; align-items: center; justify-content: center; gap: 5px; flex: none;
+          width: 40px; height: 40px; border-radius: 11px; background: var(--amber); }
+  .mark i { width: 6px; height: 18px; border-radius: 2px; background: var(--amber-ink); }
+  .site ul { display: flex; flex-wrap: wrap; list-style: none; margin: 0 -12px; padding: 0; }
+  .site li { margin: 0; }
+  .site nav a { display: flex; align-items: center; min-height: 48px; padding: 0 12px; color: var(--on-band);
+                font-weight: 600; text-decoration: none; border-bottom: 4px solid transparent; }
+  .site nav a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .site nav a[aria-current="page"] { font-weight: 800; border-bottom-color: var(--amber); }
+  /* The hero overlaps the header by a pixel so no seam shows between the two pine blocks. */
+  .hero { margin-top: -1px; padding: 17px 0 44px; }
+  h1 { font: 800 clamp(2.1rem, 8vw, 3rem)/1.1 var(--display); letter-spacing: -0.02em; margin: 0 0 12px;
+       text-wrap: balance; }
+  .meta { margin: 0; }
+  .content { padding-top: 36px; }
+  h2 { font: 700 1.6rem/1.25 var(--display); color: var(--heading); margin: 48px 0 12px; text-wrap: balance; }
+  h3 { font-size: 1.3rem; line-height: 1.35; margin: 30px 0 6px; }
+  p { margin: 0 0 16px; }
+  ul, ol { margin: 0 0 18px; padding-left: 1.4em; }
+  li { margin: 0 0 10px; }
+  li::marker { color: var(--heading); }
+  a { color: var(--link); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+  a:hover { text-decoration-thickness: 3px; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 6px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 22px 24px; margin: 28px 0; }
+  .card > :first-child { margin-top: 0; }
+  .card > :last-child { margin-bottom: 0; }
+  footer { margin-top: 56px; color: var(--muted); }
+  footer .wrap { border-top: 1px solid var(--line); padding-top: 24px; padding-bottom: 48px; }
+  @media (max-width: 420px) {
+    .wrap { padding-left: 16px; padding-right: 16px; }
+    .card { padding: 18px; }
+    h2 { font-size: 1.45rem; }
+  }
+  @media (forced-colors: active) {
+    .site nav a[aria-current="page"] { text-decoration: underline; text-decoration-thickness: 3px; }
+  }
+  .hero { padding-top: 25px; padding-bottom: 52px; }
+  h1 { font-size: clamp(2.8rem, 13vw, 4.2rem); margin-bottom: 14px; }
+  .tagline { font-size: 1.35rem; line-height: 1.45; max-width: 32em; margin: 0 0 18px; }
+  .lead { font-size: 1.25rem; line-height: 1.55; }
+  .features { list-style: none; padding: 0; margin: 20px 0 0; }
+  .features li { margin: 0; padding: 16px 0; border-top: 1px solid var(--line); }
+  .features li:last-child { border-bottom: 1px solid var(--line); }
+  .features h3 { font: 700 1.3rem/1.3 var(--display); color: var(--heading); margin: 0 0 4px; }
+  .features p { margin: 0; }
+  .links { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr)); gap: 14px;
+           list-style: none; margin: 40px 0 0; padding: 0; }
+  .links li { margin: 0; }
+  .links a { display: block; height: 100%; padding: 20px 22px; background: var(--card); border: 2px solid var(--edge);
+             border-radius: 18px; color: var(--ink); text-decoration: none; }
+  .links a:hover { border-color: var(--heading); }
+  .links strong { display: block; margin-bottom: 6px; font: 700 1.35rem/1.25 var(--display); color: var(--link);
+                  text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+  .links span { display: block; color: var(--muted); }
+  @media print {
+    :root { --paper: #FFF; --card: #FFF; --ink: #000; --muted: #222; --heading: #000; --link: #000;
+            --line: #999; --edge: #999; --band: #FFF; --on-band: #000; --amber-soft: #FFF; }
+    body { font-size: 12pt; }
+    .skip, .site nav, .mark { display: none; }
+    .hero { border-bottom: 2px solid #000; padding-bottom: 16px; }
+    h2, h3 { break-after: avoid; }
+    .card { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="band">
+  <div class="wrap site">
+    <a class="brand" href="./"><span class="mark" aria-hidden="true"><i></i><i></i></span>Backstop</a>
+    <nav aria-label="Site">
+      <ul>
+        <li><a href="./" aria-current="page">Home</a></li>
+        <li><a href="privacy.html">Privacy</a></li>
+        <li><a href="support.html">Support</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <div class="hero band">
+    <div class="wrap">
+      <h1>Backstop</h1>
+      <p class="tagline">When a text or call feels off, Backstop checks it on your iPhone and helps you bring in
+      your family before any money moves.</p>
+      <p class="meta">For iPhone · Luke Turner</p>
+    </div>
+  </div>
+
+  <div class="wrap content">
+    <p class="lead">Scammers win by getting you alone and rushing you. Backstop is a pause button for that
+    moment, and a way to get the people you trust back in the room.</p>
+
+    <h2>What it does</h2>
+    <ul class="features">
+      <li>
+        <h3>Ask your people</h3>
+        <p>One tap writes a text to the family or friends you picked, with the
+        message you saw. Nothing goes until you tap Send, and they don't need the app.</p>
+      </li>
+      <li>
+        <h3>A family phrase</h3>
+        <p>Something only your family knows, for the call that says your
+        grandchild is in trouble. A cloned voice can't know it.</p>
+      </li>
+      <li>
+        <h3>Help on a call</h3>
+        <p>Pick who the caller says they are, and Backstop gives you the words to
+        say and tells you when to hang up.</p>
+      </li>
+      <li>
+        <h3>A 24-hour payment hold</h3>
+        <p>Promise yourself a day before paying anyone who asked for
+        money. Backstop reminds you when the day is up.</p>
+      </li>
+      <li>
+        <h3>Checks on your phone</h3>
+        <p>Paste a text or pick a screenshot, and Backstop points out the
+        warning signs in plain words. The check runs on your iPhone.</p>
+      </li>
+      <li>
+        <h3>A scam text filter</h3>
+        <p>It can move clear scam texts from numbers you don't know into
+        the Junk folder in Messages, without using the internet.</p>
+      </li>
+    </ul>
+
+    <ul class="links">
+      <li><a href="privacy.html"><strong>Privacy Policy</strong>
+        <span>Backstop doesn't collect your information. Here's what stays on your iPhone.</span></a></li>
+      <li><a href="support.html"><strong>Support</strong>
+        <span>How each part of Backstop works, and how to reach us.</span></a></li>
+    </ul>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">© 2026 Luke Turner</div>
+</footer>
+</body>
+</html>
